@@ -1,0 +1,100 @@
+/* Claude RTL Pro - Injected Styles */
+
+/* ─── Active State ─── */
+body.claude-rtl-pro--active {
+  /* nothing needed on body, just a marker */
+}
+
+/* ─── RTL Base ─── */
+.claude-rtl-pro--rtl {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext !important;
+  transition: none;
+}
+
+/* ─── Mixed LTR inside RTL ─── */
+.claude-rtl-pro--rtl :where(
+  code,
+  pre,
+  .code-block,
+  [data-testid="code-block"],
+  .katex,
+  .katex-display,
+  [data-testid="katex"]
+) {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate !important;
+}
+
+/* ─── Inline Code mixed with Arabic ─── */
+.claude-rtl-pro--rtl code {
+  display: inline-block;
+  direction: ltr !important;
+  unicode-bidi: embed !important;
+}
+
+/* ─── English words / links inside Arabic ─── */
+.claude-rtl-pro--rtl a,
+.claude-rtl-pro--rtl span[role="button"] {
+  unicode-bidi: embed;
+  direction: ltr;
+}
+
+/* ─── Lists RTL Adjustments ─── */
+.claude-rtl-pro--rtl ol,
+.claude-rtl-pro--rtl ul {
+  padding-left: 0 !important;
+  padding-right: 1.5rem !important;
+  margin-right: 0 !important;
+}
+
+.claude-rtl-pro--rtl li {
+  list-style-position: inside !important;
+}
+
+/* ─── Table Headers ─── */
+.claude-rtl-pro--rtl thead,
+.claude-rtl-pro--rtl th {
+  text-align: right !important;
+}
+
+.claude-rtl-pro--rtl td {
+  unicode-bidi: plaintext;
+}
+
+/* ─── Blockquotes ─── */
+.claude-rtl-pro--rtl blockquote {
+  border-left: none !important;
+  border-right: 4px solid currentColor !important;
+  padding-left: 0 !important;
+  padding-right: 1rem !important;
+}
+
+/* ─── Input Box RTL ─── */
+.claude-rtl-pro--input-rtl {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext !important;
+}
+
+.claude-rtl-pro--input-rtl p {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+/* ─── Preserve UI Elements ─── */
+.claude-rtl-pro--rtl :where(
+  button,
+  [role="button"],
+  .btn,
+  nav,
+  header,
+  .sidebar
+) {
+  /* Do NOT flip UI chrome, only content */
+  direction: ltr !important;
+}
+
+
