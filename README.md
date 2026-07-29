@@ -31,9 +31,13 @@ I built Claude RTL Pro to solve these exact pain points for Arabic-speaking deve
 
 ## 📸 Screenshots
 
-| Before (Broken RTL) | After (Claude RTL Pro) |
-|---|---|
-| ![Before](screenshots/before.png) | ![After](screenshots/after.png) |
+**Before (Broken RTL)**
+
+![Before](screenshots/before.png)
+
+**After (Claude RTL Pro)**
+
+![After](screenshots/after.png)
 
 ## 🛠️ How to Install
 
