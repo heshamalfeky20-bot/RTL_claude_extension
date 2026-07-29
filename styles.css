@@ -10,7 +10,7 @@ body.claude-rtl-pro--active {
   direction: rtl !important;
   text-align: right !important;
   unicode-bidi: plaintext !important;
-  transition: none;
+  transition: none !important;
 }
 
 /* ─── Mixed LTR inside RTL ─── */

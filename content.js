@@ -109,19 +109,8 @@ const RTLPro = (() => {
   function onMutations() {
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      walkAndApply(document.body);
+      walkAndApply(getChatContainer());
     }, CONFIG.DEBOUNCE_MS);
-  }
-
-  function startObserver() {
-    if (!document.body) {
-      warn('document.body not ready, retrying in 100ms');
-      setTimeout(startObserver, 100);
-      return;
-    }
-    if (!observer) observer = new MutationObserver(onMutations);
-    observer.observe(document.body, CONFIG.OBSERVER_CONFIG);
-    log('MutationObserver started');
   }
 
   function stopObserver() {
@@ -152,7 +141,7 @@ const RTLPro = (() => {
     if (isEnabled) {
       document.body.classList.add('claude-rtl-pro--active');
       startObserver();
-      walkAndApply(document.body);
+      walkAndApply(getChatContainer());
     } else {
       document.body.classList.remove('claude-rtl-pro--active');
       stopObserver();
@@ -170,11 +159,56 @@ const RTLPro = (() => {
     document.querySelectorAll('.claude-rtl-pro--input-rtl').forEach(el => el.classList.remove('claude-rtl-pro--input-rtl'));
   }
 
+  function getChatContainer() {
+    for (const sel of CONFIG.SEARCH_ROOT_SELECTORS) {
+      const el = document.querySelector(sel);
+      if (el) return el;
+    }
+    return document.body;
+  }
+
+  function startObserver() {
+    if (!document.body) {
+      warn('document.body not ready, retrying in 100ms');
+      setTimeout(startObserver, 100);
+      return;
+    }
+    if (!observer) observer = new MutationObserver(onMutations);
+    const target = getChatContainer();
+    observer.observe(target, CONFIG.OBSERVER_CONFIG);
+    log('MutationObserver started on', target.tagName, target.className);
+  }
+
+  function handleDirectToggle(message) {
+    if (message.action === 'toggle') {
+      isEnabled = message.enabled;
+      log('Direct toggle:', isEnabled);
+      refresh();
+    }
+  }
+
   function initBrowser() {
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === 'local' && changes.claudeRtlEnabled) {
         isEnabled = changes.claudeRtlEnabled.newValue;
         log('Storage changed, enabled:', isEnabled);
+        refresh();
+      }
+    });
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === 'getState') {
+        sendResponse({ enabled: isEnabled });
+      } else if (message.action === 'toggle') {
+        handleDirectToggle(message);
+        sendResponse({ enabled: isEnabled });
+      }
+    });
+
+    chrome.commands.onCommand.addListener((command) => {
+      if (command === 'toggle-rtl') {
+        isEnabled = !isEnabled;
+        chrome.storage.local.set({ claudeRtlEnabled: isEnabled });
         refresh();
       }
     });

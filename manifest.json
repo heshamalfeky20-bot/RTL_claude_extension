@@ -27,6 +27,15 @@
       "run_at": "document_idle"
     }
   ],
+  "commands": {
+    "toggle-rtl": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+R",
+        "mac": "MacCtrl+Shift+R"
+      },
+      "description": "Toggle RTL support on/off"
+    }
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

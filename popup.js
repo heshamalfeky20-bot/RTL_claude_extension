@@ -14,6 +14,14 @@ function initPopup() {
     statusText.textContent = enabled ? 'Active on claude.ai' : 'Disabled';
   }
 
+  function sendToggleToTab(enabled) {
+    chrome.tabs.query({ url: 'https://claude.ai/*' }, (tabs) => {
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, { action: 'toggle', enabled }).catch(() => {});
+      });
+    });
+  }
+
   chrome.storage.local.get(['claudeRtlEnabled'], (result) => {
     const enabled = result.claudeRtlEnabled !== false;
     updateUI(enabled);
@@ -27,6 +35,7 @@ function initPopup() {
         return;
       }
       updateUI(enabled);
+      sendToggleToTab(enabled);
     });
   });
 }
